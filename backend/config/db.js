@@ -12,16 +12,20 @@ const connectDB = async () => {
       const conn = await mongoose.connect(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        serverSelectionTimeoutMS: 3000,
+        serverSelectionTimeoutMS: 10000,
       });
       console.log(`MongoDB Connected: ${conn.connection.host}`);
       connected = true;
     } catch (error) {
-      console.warn(`Configured MongoDB connection failed (${error.message}).`);
+      console.error(`Configured MongoDB connection failed: ${error.message}`);
     }
   }
 
   if (!connected) {
+    if (process.env.NODE_ENV === 'production') {
+      console.error('CRITICAL: Cannot connect to MongoDB Atlas in production. Please ensure 0.0.0.0/0 is whitelisted in MongoDB Atlas Network Access.');
+      process.exit(1);
+    }
     console.log('Falling back to in-memory MongoDB server for local development...');
     try {
       const { MongoMemoryServer } = require('mongodb-memory-server');
