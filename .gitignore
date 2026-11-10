@@ -23,8 +23,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Editor & OS files
+# OS & IDE files
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+push_to_github.bat
