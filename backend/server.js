@@ -17,8 +17,15 @@ app.use(cors({
     if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
       return callback(null, true);
     }
-    // Allow Vercel deployments
-    if (/https:\/\/(dentalhub|dochub).*\.vercel\.app/.test(origin)) {
+    // Allow custom frontend URL if configured in env
+    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL.replace(/\/$/, '')) {
+      return callback(null, true);
+    }
+    if (process.env.CLIENT_URL && origin === process.env.CLIENT_URL.replace(/\/$/, '')) {
+      return callback(null, true);
+    }
+    // Allow any Vercel deployment (doc-hub, dochub, preview branches, etc.)
+    if (/^https:\/\/.*\.vercel\.app$/.test(origin)) {
       return callback(null, true);
     }
     // Fallback: allow origin in development mode
